@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Setter
@@ -18,5 +17,5 @@ public class Url {
     @Column(name = "url_key")
     private String key;
     @Column(name = "redirect_count")
-    private AtomicInteger count;
+    private int count;
 }

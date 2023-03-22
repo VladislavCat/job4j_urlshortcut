@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.url.model.Url;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @AllArgsConstructor
@@ -30,7 +30,10 @@ public class UrlRepository {
     }
 
     public void incrementRedirectCount(Url url) {
-        url.getCount().incrementAndGet();
-        crudRepository.run(session -> session.update(url));
+        url.setCount(url.getCount() + 1);
+        crudRepository.run(session -> {
+            session.getEntityManagerFactory().createEntityManager().lock(url, LockModeType.PESSIMISTIC_WRITE);
+            session.update(url);
+        });
     }
 }
